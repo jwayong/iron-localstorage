@@ -11,9 +11,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../polymer/polymer.html">
 
 <!--
-Element access to Web Storage API (window.localStorage).
+Element access to Web Storage API (window.sessionStorage).
 
-Keeps `value` property in sync with localStorage.
+Keeps `value` property in sync with sessionStorage.
 
 Value is saved as json by default.
 
@@ -22,10 +22,10 @@ Value is saved as json by default.
 `ls-sample` will automatically save changes to its value.
 
     <dom-module id="ls-sample">
-      <iron-localstorage name="my-app-storage"
+      <iron-sessionstorage name="my-app-storage"
         value="{{cartoon}}"
-        on-iron-localstorage-load-empty="initializeDefaultCartoon"
-      ></iron-localstorage>
+        on-iron-sessionstorage-load-empty="initializeDefaultCartoon"
+      ></iron-sessionstorage>
     </dom-module>
 
     <script>
@@ -43,7 +43,7 @@ Value is saved as json by default.
             hasEars: true
           }
         },
-        // use path set api to propagate changes to localstorage
+        // use path set api to propagate changes to sessionstorage
         makeModifications: function() {
           this.set('cartoon.name', "Minions");
           this.set('cartoon.hasEars', false);
@@ -68,20 +68,20 @@ Value is saved as json by default.
 * **Warning**: do not bind value to sub-properties until Polymer
 [bug 1550](https://github.com/Polymer/polymer/issues/1550)
 is resolved. Local storage will be blown away.
-`<iron-localstorage value="{{foo.bar}}"` will cause **data loss**.
+`<iron-sessionstorage value="{{foo.bar}}"` will cause **data loss**.
 
 @demo demo/index.html
 @hero hero.svg
 -->
-<dom-module id="iron-localstorage"></dom-module>
+<dom-module id="iron-sessionstorage"></dom-module>
 <script>
 
   Polymer({
-    is: 'iron-localstorage',
+    is: 'iron-sessionstorage',
 
     properties: {
       /**
-       * localStorage item key
+       * sessionStorage item key
        */
       name: {
         type: String,
@@ -166,7 +166,7 @@ is resolved. Local storage will be blown away.
 
     /**
      * Loads the value again. Use if you modify
-     * localStorage using DOM calls, and want to
+     * sessionStorage using DOM calls, and want to
      * keep this element in sync.
      */
     reload: function() {
@@ -180,11 +180,11 @@ is resolved. Local storage will be blown away.
      */
     _load: function(externalChange) {
       try {
-        var v = window.localStorage.getItem(this.name);
+        var v = window.sessionStorage.getItem(this.name);
       } catch (ex) {
         this.errorMessage = ex.message;
 
-        this._error("Could not save to localStorage.  Try enabling cookies for this page.", ex);
+        this._error("Could not save to sessionStorage.  Try enabling cookies for this page.", ex);
       };
 
       if (v === null) {
@@ -192,7 +192,7 @@ is resolved. Local storage will be blown away.
         this._doNotSave = true;  // guard for save watchers
         this.value = null;
         this._doNotSave = false;
-        this.fire('iron-localstorage-load-empty', { externalChange: externalChange});
+        this.fire('iron-sessionstorage-load-empty', { externalChange: externalChange});
       } else {
         if (!this.useRaw) {
           try { // parse value as JSON
@@ -207,34 +207,34 @@ is resolved. Local storage will be blown away.
         this._doNotSave = true;
         this.value = v;
         this._doNotSave = false;
-        this.fire('iron-localstorage-load', { externalChange: externalChange});
+        this.fire('iron-sessionstorage-load', { externalChange: externalChange});
       }
     },
 
     /**
-     * Saves the value to localStorage. Call to save if autoSaveDisabled is set.
-     * If `value` is null or undefined, deletes localStorage.
+     * Saves the value to sessionStorage. Call to save if autoSaveDisabled is set.
+     * If `value` is null or undefined, deletes sessionStorage.
      */
     save: function() {
       var v = this.useRaw ? this.value : JSON.stringify(this.value);
       try {
         if (this.value === null || this.value === undefined) {
-          window.localStorage.removeItem(this.name);
+          window.sessionStorage.removeItem(this.name);
         } else {
-          window.localStorage.setItem(this.name, /** @type {string} */ (v));
+          window.sessionStorage.setItem(this.name, /** @type {string} */ (v));
         }
       }
       catch(ex) {
         // Happens in Safari incognito mode,
         this.errorMessage = ex.message;
-        Polymer.Base._error("Could not save to localStorage. Incognito mode may be blocking this action", ex);
+        Polymer.Base._error("Could not save to sessionStorage. Incognito mode may be blocking this action", ex);
       }
     }
 
     /**
-     * Fired when value loads from localStorage.
+     * Fired when value loads from sessionStorage.
      *
-     * @event iron-localstorage-load
+     * @event iron-sessionstorage-load
      * @param {{externalChange:boolean}} detail -
      *     externalChange: true if change occured in different window.
      */
@@ -243,7 +243,7 @@ is resolved. Local storage will be blown away.
      * Fired when loaded value does not exist.
      * Event handler can be used to initialize default value.
      *
-     * @event iron-localstorage-load-empty
+     * @event iron-sessionstorage-load-empty
      * @param {{externalChange:boolean}} detail -
      *     externalChange: true if change occured in different window.
      */

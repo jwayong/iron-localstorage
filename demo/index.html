@@ -12,13 +12,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <html>
 <head>
 
-  <title>iron-localstorage</title>
+  <title>iron-sessionstorage</title>
 
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
 
   <link rel="import" href="../../paper-styles/demo-pages.html">
   <link rel="import" href="../../paper-checkbox/paper-checkbox.html">
-  <link rel="import" href="../iron-localstorage.html">
+  <link rel="import" href="../iron-sessionstorage.html">
   <style is="custom-style">
     input {
       padding: 0.4em;
@@ -32,12 +32,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <div class="vertical-section vertical-section-container centered">
 
     <template is="dom-bind">
-      <iron-localstorage
-        name="polymer-localstorage-x-test1"
+      <iron-sessionstorage
+        name="polymer-sessionstorage-x-test1"
         value="{{value}}"
-        on-iron-localstorage-load-empty="initializeDefaultValue"
-        ></iron-localstorage>
-      <p>Form element below will be kept in sync with <code>localStorage</code>.</p>
+        on-iron-sessionstorage-load-empty="initializeDefaultValue"
+        ></iron-sessionstorage>
+      <p>Form element below will be kept in sync with <code>sessionStorage</code>.</p>
       <p>Demo source also shows how to initialize storage to default value</p>
       <p>If you open another window with this test, changes in one window will propagate to
       the other immediately.</p>
